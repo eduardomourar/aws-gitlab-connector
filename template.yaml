@@ -27,14 +27,6 @@ Globals:
     Timeout: 15
 
 Resources:
-  S3Bucket:
-    Type: AWS::S3::Bucket
-    Properties: 
-      BucketEncryption:
-        ServerSideEncryptionConfiguration:
-          - ServerSideEncryptionByDefault:
-              SSEAlgorithm: AES256
-      BucketName: !Ref BucketName
   GitConnectorFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -45,7 +37,7 @@ Resources:
       Role: !GetAtt LambdaExecutionRole.Arn
       Events:
         GitLab:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#HttpApi
           Properties:
             Path: /gitlab
             Method: POST
@@ -79,7 +71,7 @@ Resources:
               Resource: !Sub "arn:aws:s3:::${BucketName}/*"
 Outputs:
   GitLabAPI:
-    Description: "API Gateway endpoint URL for Prod environment for First Function"
+    Description: "API Gateway endpoint URL"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/gitlab/"
 
   GitConnectorFunction:
